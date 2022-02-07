@@ -25,16 +25,6 @@ Processing file 'fixed_main.py'
 --------------------------------------------------------------------------------
 
 
-
-TensorFlow 2.0 Upgrade Script
------------------------------
-Converted 1 files
-Detected 0 issues that require attention
---------------------------------------------------------------------------------
-================================================================================
-Detailed log follows:
-
-================================================================================
 --------------------------------------------------------------------------------
 Processing file 'hyperparam_main.py'
  outputting to 'hyperparam_main.py'
@@ -51,5 +41,30 @@ Processing file 'hyperparam_main.py'
 126:4: INFO: Renamed 'tf.keras.backend.set_session' to 'tf.compat.v1.keras.backend.set_session'
 155:4: INFO: Renamed 'tf.keras.backend.set_session' to 'tf.compat.v1.keras.backend.set_session'
 --------------------------------------------------------------------------------
+
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'utils.py'
+ outputting to 'utils.py'
+--------------------------------------------------------------------------------
+
+89:9: INFO: Added keywords to args of function 'tf.reduce_sum'
+144:16: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+153:16: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+172:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+174:15: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+174:33: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+175:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+177:14: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+200:23: INFO: Renamed 'tf.get_default_graph' to 'tf.compat.v1.get_default_graph'
+204:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+206:15: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+206:33: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+207:12: INFO: Renamed 'tf.train.Saver' to 'tf.compat.v1.train.Saver'
+210:34: INFO: Renamed 'tf.get_default_graph' to 'tf.compat.v1.get_default_graph'
+--------------------------------------------------------------------------------
+
+
 
 
