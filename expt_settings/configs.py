@@ -44,8 +44,8 @@ class ExperimentConfig(object):
   """
 
   # default_experiments = ['volatility', 'electricity', 'traffic', 'favorita']
-  default_experiments = ['highways']
-  # default_experiments = ['volatility']
+  # default_experiments = ['highways']
+  default_experiments = ['volatility']
 
   def __init__(self, experiment='volatility', root_folder=None):
     """Creates configs based on default experiment chosen.
@@ -86,8 +86,8 @@ class ExperimentConfig(object):
         #         # 'traffic': 'hourly_data.csv',
         #         # 'favorita': 'favorita_consolidated.csv'
 
-        'highways' : 'highway_data.csv',
-      # 'volatility': 'formatted_omi_vol.csv'
+        # 'highways' : 'highway_data.csv',
+      'volatility': 'formatted_omi_vol.csv'
     }
 
     return os.path.join(self.data_folder, csv_map[self.experiment])
@@ -105,13 +105,13 @@ class ExperimentConfig(object):
     """
 
     data_formatter_class = {
-        # 'volatility': tft.data_formatters.volatility.VolatilityFormatter,
-        # 'electricity': tft.data_formatters.electricity.ElectricityFormatter,
-        # 'traffic': tft.data_formatters.traffic.TrafficFormatter,
-        # 'favorita': tft.data_formatters.favorita.FavoritaFormatter
+        # 'volatility': data_formatters.volatility.VolatilityFormatter,
+        # 'electricity': data_formatters.electricity.ElectricityFormatter,
+        # 'traffic': data_formatters.traffic.TrafficFormatter,
+        # 'favorita': data_formatters.favorita.FavoritaFormatter
 
-        'highways': tft.data_formatters.highways.HighwaysFormatter
-      # 'volatility' : tft.data_formatters.volatility.VolatilityFormatter
+        # 'highways': data_formatters.highways.HighwaysFormatter
+      'volatility' : data_formatters.volatility.VolatilityFormatter
     }
 
     return data_formatter_class[self.experiment]()

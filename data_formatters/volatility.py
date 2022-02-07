@@ -19,13 +19,13 @@
 Defines dataset specific column definitions and data transformations.
 """
 
-import tft.data_formatters.base
-import tft.libs.utils as utils
+import data_formatters.base
+import libs.utils as utils
 import sklearn.preprocessing
 
-GenericDataFormatter = tft.data_formatters.base.GenericDataFormatter
-DataTypes = tft.data_formatters.base.DataTypes
-InputTypes = tft.data_formatters.base.InputTypes
+GenericDataFormatter = data_formatters.base.GenericDataFormatter
+DataTypes = data_formatters.base.DataTypes
+InputTypes = data_formatters.base.InputTypes
 
 
 class VolatilityFormatter(GenericDataFormatter):
