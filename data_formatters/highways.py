@@ -1,13 +1,13 @@
 from sklearn.preprocessing import LabelEncoder
 
-import tft.data_formatters.base
-import tft.libs.utils as utils
+import data_formatters.base
+import libs.utils as utils
 import pandas as pd
 import sklearn.preprocessing
 
-GenericDataFormatter = tft.data_formatters.base.GenericDataFormatter
-DataTypes = tft.data_formatters.base.DataTypes
-InputTypes = tft.data_formatters.base.InputTypes
+GenericDataFormatter = data_formatters.base.GenericDataFormatter
+DataTypes = data_formatters.base.DataTypes
+InputTypes = data_formatters.base.InputTypes
 
 class HighwaysFormatter(GenericDataFormatter):
   """Defines and formats data for the volatility dataset.

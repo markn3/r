@@ -22,11 +22,11 @@ for the main experiments used in the publication.
 
 import os
 
-# import tft.data_formatters.electricity
-# import tft.data_formatters.favorita
-# import tft.data_formatters.traffic
-# import tft.data_formatters.volatility
-import tft.data_formatters.highways
+# import data_formatters.electricity
+# import data_formatters.favorita
+# import data_formatters.traffic
+import data_formatters.volatility
+# import data_formatters.highways
 
 
 class ExperimentConfig(object):
