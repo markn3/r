@@ -181,7 +181,7 @@ if __name__ == "__main__":
         metavar="e",
         type=str,
         nargs="?",
-        default="volatility",
+        default="highways",
         choices=experiment_names,
         help="Experiment Name. Default={}".format(",".join(experiment_names)))
     parser.add_argument(

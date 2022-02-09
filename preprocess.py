@@ -18,17 +18,6 @@ df = df.reset_index(drop=True)
 print("Columns:", df.columns)
 print(df)
 
-# test_data.drop(test_data.index[test_data['vehicleID'] == 0], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 4], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 684], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 689], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 2048], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 2403], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 2456], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 2641], inplace=True)
-# test_data.drop(test_data.index[test_data['vehicleID'] == 2864], inplace=True)
-
-
 test_x = np.zeros((1, 10, 15))
 test_y = np.zeros((1, 2))
 temp_car = pd.DataFrame()
