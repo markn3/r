@@ -1147,6 +1147,7 @@ class TemporalFusionTransformer(object):
 
     all_callbacks = callbacks
 
+
     self.model.fit(
         x=data,
         y=np.concatenate([labels, labels, labels], axis=-1),

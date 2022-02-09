@@ -89,6 +89,9 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
     opt_manager.clear()
 
   print("*** Running calibration ***")
+
+  tf.compat.v1.experimental.output_all_intermediates(True)
+
   while len(opt_manager.results.columns) < hyperparam_iterations:
     print("# Running hyperparam optimisation {} of {} for {}".format(
         len(opt_manager.results.columns) + 1, hyperparam_iterations, "TFT"))
