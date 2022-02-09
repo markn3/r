@@ -720,14 +720,20 @@ class TemporalFusionTransformer(object):
 
     # Functions.
     def _batch_single_entity(input_data):
+      print("Time_steps: ", len(input_data))
+      print("lags: ", self.time_steps)
+      print("x: ", (input_data.values).shape)
+
       time_steps = len(input_data)
       lags = self.time_steps
       x = input_data.values
       if time_steps >= lags:
+        print("SUFFICIENT")
         return np.stack(
             [x[i:time_steps - (lags - 1) + i, :] for i in range(lags)], axis=1)
 
       else:
+        print("NOT")
         return None
 
     id_col = self._get_single_col_by_type(InputTypes.ID)
@@ -748,11 +754,13 @@ class TemporalFusionTransformer(object):
           'outputs': [target_col],
           'inputs': input_cols
       }
-
       for k in col_mappings:
         cols = col_mappings[k]
+        print("Cols: ", cols, "  sliced: ", type(sliced))
+        print("Copy: ", sliced[cols].copy())
         arr = _batch_single_entity(sliced[cols].copy())
 
+        print("Arr:", arr.shape)
         if k not in data_map:
           data_map[k] = [arr]
         else:

@@ -86,7 +86,7 @@ class ExperimentConfig(object):
         #         # 'traffic': 'hourly_data.csv',
         #         # 'favorita': 'favorita_consolidated.csv'
 
-        # 'highways' : 'highway_data.csv',
+        # 'highways' : 'highway_data.csv'
       'volatility': 'formatted_omi_vol.csv'
     }
 
