@@ -217,7 +217,7 @@ class HighwaysFormatter(GenericDataFormatter):
         'dropout_rate': 0.3,
         'hidden_layer_size': 160,
         'learning_rate': 0.01,
-        'minibatch_size': 64,
+        'minibatch_size': 16,
         'max_gradient_norm': 0.01,
         'num_heads': 1,
         'stack_size': 1

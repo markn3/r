@@ -14,10 +14,19 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Main hyperparameter optimisation script.
+"""Trains TFT based on a defined set of parameters.
 
-Performs random search to optimize hyperparameters on a single machine. For new
-datasets, inputs to the main(...) should be customised.
+Uses default parameters supplied from the configs file to train a TFT model from
+scratch.
+
+Usage:
+python3 script_train_fixed_params {expt_name} {output_folder}
+
+Command line args:
+  expt_name: Name of dataset/experiment to train.
+  output_folder: Root folder in which experiment is saved
+
+
 """
 
 import argparse
@@ -38,26 +47,33 @@ HyperparamOptManager = libs.hyperparam_opt.HyperparamOptManager
 ModelClass = libs.tft_model.TemporalFusionTransformer
 
 
-def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
-         data_csv_path, data_formatter):
-  """Runs main hyperparameter optimization routine.
+def main(expt_name,
+         use_gpu,
+         model_folder,
+         data_csv_path,
+         data_formatter,
+         use_testing_mode=False):
+  """Trains tft based on defined model params.
 
   Args:
     expt_name: Name of experiment
     use_gpu: Whether to run tensorflow with GPU operations
-    restart_opt: Whether to run hyperparameter optimization from scratch
     model_folder: Folder path where models are serialized
-    hyperparam_iterations: Number of iterations of random search
     data_csv_path: Path to csv file containing data
     data_formatter: Dataset-specific data fromatter (see
       expt_settings.dataformatter.GenericDataFormatter)
+    use_testing_mode: Uses a smaller models and data sizes for testing purposes
+      only -- switch to False to use original default settings
   """
+
+  num_repeats = 1
 
   if not isinstance(data_formatter, data_formatters.base.GenericDataFormatter):
     raise ValueError(
         "Data formatters should inherit from" +
         "AbstractDataFormatter! Type={}".format(type(data_formatter)))
 
+  # Tensorflow setup
   default_keras_session = tf.compat.v1.keras.backend.get_session()
 
   if use_gpu:
@@ -66,7 +82,8 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
   else:
     tf_config = utils.get_default_tensorflow_config(tf_device="cpu")
 
-  print("### Running hyperparameter optimization for {} ###".format(expt_name))
+  print("*** Training from defined parameters for {} ***".format(expt_name))
+
   print("Loading & splitting data...")
   raw_data = pd.read_csv(data_csv_path, index_col=0)
   train, valid, test = data_formatter.split_data(raw_data)
@@ -75,26 +92,28 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
 
   # Sets up default params
   fixed_params = data_formatter.get_experiment_params()
-  param_ranges = ModelClass.get_hyperparm_choices()
-  fixed_params["model_folder"] = model_folder
+  params = data_formatter.get_default_model_params()
+  params["model_folder"] = model_folder
 
+  # Parameter overrides for testing only! Small sizes used to speed up script.
+  if use_testing_mode:
+    fixed_params["num_epochs"] = 1
+    params["hidden_layer_size"] = 5
+    train_samples, valid_samples = 100, 10
+
+  # Sets up hyperparam manager
   print("*** Loading hyperparm manager ***")
-  opt_manager = HyperparamOptManager(param_ranges, fixed_params, model_folder)
+  opt_manager = HyperparamOptManager({k: [params[k]] for k in params},
+                                     fixed_params, model_folder)
 
-  success = opt_manager.load_results()
-  if success and not restart_opt:
-    print("Loaded results from previous training")
-  else:
-    print("Creating new hyperparameter optimisation")
-    opt_manager.clear()
-
+  # Training -- one iteration only
   print("*** Running calibration ***")
+  print("Params Selected:")
+  for k in params:
+    print("{}: {}".format(k, params[k]))
 
-  tf.compat.v1.experimental.output_all_intermediates(True)
-
-  while len(opt_manager.results.columns) < hyperparam_iterations:
-    print("# Running hyperparam optimisation {} of {} for {}".format(
-        len(opt_manager.results.columns) + 1, hyperparam_iterations, "TFT"))
+  best_loss = np.Inf
+  for _ in range(num_repeats):
 
     tf.compat.v1.reset_default_graph()
     with tf.Graph().as_default(), tf.compat.v1.Session(config=tf_config) as sess:
@@ -113,13 +132,9 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
 
       val_loss = model.evaluate()
 
-      if np.allclose(val_loss, 0.) or np.isnan(val_loss):
-        # Set all invalid losses to infintiy.
-        # N.b. val_loss only becomes 0. when the weights are nan.
-        print("Skipping bad configuration....")
-        val_loss = np.inf
-
-      opt_manager.update_score(params, val_loss, model)
+      if val_loss < best_loss:
+        opt_manager.update_score(params, val_loss, model)
+        best_loss = val_loss
 
       tf.compat.v1.keras.backend.set_session(default_keras_session)
 
@@ -157,7 +172,7 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
 
     tf.compat.v1.keras.backend.set_session(default_keras_session)
 
-  print("Hyperparam optimisation completed @ {}".format(dte.datetime.now()))
+  print("Training completed @ {}".format(dte.datetime.now()))
   print("Best validation loss = {}".format(val_loss))
   print("Params:")
 
@@ -171,7 +186,7 @@ def main(expt_name, use_gpu, restart_opt, model_folder, hyperparam_iterations,
 if __name__ == "__main__":
 
   def get_args():
-    """Returns settings from command line."""
+    """Gets settings from command line."""
 
     experiment_names = ExperimentConfig.default_experiments
 
@@ -181,7 +196,7 @@ if __name__ == "__main__":
         metavar="e",
         type=str,
         nargs="?",
-        default="highways",
+        default="volatility",
         choices=experiment_names,
         help="Experiment Name. Default={}".format(",".join(experiment_names)))
     parser.add_argument(
@@ -199,36 +214,25 @@ if __name__ == "__main__":
         choices=["yes", "no"],
         default="no",
         help="Whether to use gpu for training.")
-    parser.add_argument(
-        "restart_hyperparam_opt",
-        metavar="o",
-        type=str,
-        nargs="?",
-        choices=["yes", "no"],
-        default="yes",
-        help="Whether to re-run hyperparameter optimisation from scratch.")
 
     args = parser.parse_known_args()[0]
 
     root_folder = None if args.output_folder == "." else args.output_folder
 
-    return args.expt_name, root_folder, args.use_gpu == "yes", \
-        args.restart_hyperparam_opt
+    return args.expt_name, root_folder, args.use_gpu == "yes"
 
-  # Load settings for default experiments
-  name, folder, use_tensorflow_with_gpu, restart = get_args()
+  name, output_folder, use_tensorflow_with_gpu = get_args()
 
-  print("Using output folder {}".format(folder))
+  print("Using output folder {}".format(output_folder))
 
-  config = ExperimentConfig(name, folder)
+  config = ExperimentConfig(name, output_folder)
   formatter = config.make_data_formatter()
 
   # Customise inputs to main() for new datasets.
   main(
       expt_name=name,
       use_gpu=use_tensorflow_with_gpu,
-      restart_opt=restart,
-      model_folder=os.path.join(config.model_folder, "main"),
-      hyperparam_iterations=config.hyperparam_iterations,
+      model_folder=os.path.join(config.model_folder, "fixed"),
       data_csv_path=config.data_csv_path,
-      data_formatter=formatter)
+      data_formatter=formatter,
+      use_testing_mode=True)  # Change to false to use original default params
