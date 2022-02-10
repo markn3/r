@@ -201,8 +201,8 @@ class HighwaysFormatter(GenericDataFormatter):
     """Returns fixed model parameters for experiments."""
 
     fixed_params = {
-        'total_time_steps': 252 + 5,
-        'num_encoder_steps': 252,
+        'total_time_steps': 205,
+        'num_encoder_steps': 200,
         'num_epochs': 100,
         'early_stopping_patience': 5,
         'multiprocessing_workers': 5,

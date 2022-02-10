@@ -84,6 +84,8 @@ def main(expt_name,
 
   print("*** Training from defined parameters for {} ***".format(expt_name))
 
+  tf.compat.v1.experimental.output_all_intermediates(True)
+
   print("Loading & splitting data...")
   raw_data = pd.read_csv(data_csv_path, index_col=0)
   train, valid, test = data_formatter.split_data(raw_data)

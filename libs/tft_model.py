@@ -720,20 +720,14 @@ class TemporalFusionTransformer(object):
 
     # Functions.
     def _batch_single_entity(input_data):
-      print("Time_steps: ", len(input_data))
-      print("lags: ", self.time_steps)
-      print("x: ", (input_data.values).shape)
-
       time_steps = len(input_data)
       lags = self.time_steps
       x = input_data.values
       if time_steps >= lags:
-        print("SUFFICIENT")
         return np.stack(
             [x[i:time_steps - (lags - 1) + i, :] for i in range(lags)], axis=1)
 
       else:
-        print("NOT")
         return None
 
     id_col = self._get_single_col_by_type(InputTypes.ID)
