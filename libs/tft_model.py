@@ -756,11 +756,8 @@ class TemporalFusionTransformer(object):
       }
       for k in col_mappings:
         cols = col_mappings[k]
-        print("Cols: ", cols, "  sliced: ", type(sliced))
-        print("Copy: ", sliced[cols].copy())
         arr = _batch_single_entity(sliced[cols].copy())
 
-        print("Arr:", arr.shape)
         if k not in data_map:
           data_map[k] = [arr]
         else:
