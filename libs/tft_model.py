@@ -1382,7 +1382,7 @@ class TemporalFusionTransformer(object):
     return {
         'dropout_rate': [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9],
         'hidden_layer_size': [10, 20, 40, 80, 160, 240, 320],
-        'minibatch_size': [64, 128, 256],
+        'minibatch_size': [16, 32, 64],
         'learning_rate': [1e-4, 1e-3, 1e-2],
         'max_gradient_norm': [0.01, 1.0, 100.0],
         'num_heads': [1, 4],
