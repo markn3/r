@@ -1338,20 +1338,21 @@ class TemporalFusionTransformer(object):
     return os.path.join(model_folder, '{}.check'.format(self.name))
 
   def save(self, model_folder):
-    """Saves optimal TFT weights.
-
-    Args:
-      model_folder: Location to serialze model.
-    """
-    # Allows for direct serialisation of tensorflow variables to avoid spurious
-    # issue with Keras that leads to different performance evaluation results
-    # when model is reloaded (https://github.com/keras-team/keras/issues/4875).
-
-    utils.save(
-        tf.compat.v1.keras.backend.get_session(),
-        model_folder,
-        cp_name=self.name,
-        scope=self.name)
+    self.model.save('outputs/saved_models/highways_saved')
+    # """Saves optimal TFT weights.
+    #
+    # Args:
+    #   model_folder: Location to serialze model.
+    # """
+    # # Allows for direct serialisation of tensorflow variables to avoid spurious
+    # # issue with Keras that leads to different performance evaluation results
+    # # when model is reloaded (https://github.com/keras-team/keras/issues/4875).
+    #
+    # utils.save(
+    #     tf.compat.v1.keras.backend.get_session(),
+    #     model_folder,
+    #     cp_name=self.name,
+    #     scope=self.name)
 
   def load(self, model_folder, use_keras_loadings=False):
     """Loads TFT weights.

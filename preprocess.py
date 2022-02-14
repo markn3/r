@@ -11,13 +11,14 @@ pd.set_option('display.max_columns', 17)
 print("Reading....")
 start = time.time()
 df = pd.read_csv('outputs/data/highways/highway_data.csv')
-df = df.sort_values(['Vehicle_ID', 'Global_Time'])
+
+# df = df.sort_values(['Vehicle_ID', 'Global_Time'])
 
 df.dropna()
 # -> 4118063
 
-df = df.drop(columns=['Unnamed: 0'])
-df = df.reset_index(drop=True)
+# df = df.drop(columns=['Unnamed: 0'])
+# df = df.reset_index(drop=True)
 
 
 print("Columns:", df.columns)
@@ -27,9 +28,6 @@ print(df)
 # current_car = 1
 # counter = 0
 # countercounter = 0
-
-print(df.loc[[0]])
-print(df.loc[[269]])
 
 temp = df.to_numpy()
 print(temp.shape)
@@ -58,4 +56,4 @@ print(temp.shape)
 # print("Number of cars that dont meet the criteria: ", countercounter)
 # print("AVERAGE: ", total/3366)
 
-df.to_csv('highway_data_2.csv')
+# df.to_csv('highway_data_2.csv')
