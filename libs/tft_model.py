@@ -1338,21 +1338,20 @@ class TemporalFusionTransformer(object):
     return os.path.join(model_folder, '{}.check'.format(self.name))
 
   def save(self, model_folder):
-    self.model.save('outputs/saved_models/highways_saved')
-    # """Saves optimal TFT weights.
-    #
-    # Args:
-    #   model_folder: Location to serialze model.
-    # """
-    # # Allows for direct serialisation of tensorflow variables to avoid spurious
-    # # issue with Keras that leads to different performance evaluation results
-    # # when model is reloaded (https://github.com/keras-team/keras/issues/4875).
-    #
-    # utils.save(
-    #     tf.compat.v1.keras.backend.get_session(),
-    #     model_folder,
-    #     cp_name=self.name,
-    #     scope=self.name)
+    """Saves optimal TFT weights.
+
+    Args:
+      model_folder: Location to serialze model.
+    """
+    # Allows for direct serialisation of tensorflow variables to avoid spurious
+    # issue with Keras that leads to different performance evaluation results
+    # when model is reloaded (https://github.com/keras-team/keras/issues/4875).
+
+    utils.save(
+        tf.compat.v1.keras.backend.get_session(),
+        model_folder,
+        cp_name=self.name,
+        scope=self.name)
 
   def load(self, model_folder, use_keras_loadings=False):
     """Loads TFT weights.
@@ -1381,11 +1380,20 @@ class TemporalFusionTransformer(object):
   def get_hyperparm_choices(cls):
     """Returns hyperparameter ranges for random search."""
     return {
-        'dropout_rate': [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9],
-        'hidden_layer_size': [10, 20, 40, 80, 160, 240, 320],
-        'minibatch_size': [16, 32, 64],
-        'learning_rate': [1e-4, 1e-3, 1e-2],
-        'max_gradient_norm': [0.01, 1.0, 100.0],
-        'num_heads': [1, 4],
+        # 'dropout_rate': [0.1, 0.2, 0.3, 0.4, 0.5, 0.7],
+        # 'hidden_layer_size': [10, 20, 40],
+        # 'minibatch_size': [64, 32, 16],
+        # 'learning_rate': [1e-4, 1e-3, 1e-2],
+        # 'max_gradient_norm': [0.01, 1.0, 100.0],
+        # 'num_heads': [1, 4],
+        # 'stack_size': [1],
+
+        # 0.159
+        'dropout_rate': [0.3],
+        'hidden_layer_size': [40],
+        'minibatch_size': [64],
+        'learning_rate': [1e-4],
+        'max_gradient_norm': [10],
+        'num_heads': [4],
         'stack_size': [1],
     }

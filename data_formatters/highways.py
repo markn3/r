@@ -21,13 +21,13 @@ class HighwaysFormatter(GenericDataFormatter):
   _column_definition = [
       ('Global_Time', DataTypes.DATE, InputTypes.TIME),
       ('v_length', DataTypes.REAL_VALUED, InputTypes.STATIC_INPUT),
-      ('v_Width', DataTypes.REAL_VALUED, InputTypes.STATIC_INPUT),
-      ('v_Vel', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),
+      # ('v_Width', DataTypes.REAL_VALUED, InputTypes.STATIC_INPUT),
+      # ('v_Vel', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),
       ('v_Acc', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),
       ('Prec_Vel', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),
       ('FR', DataTypes.REAL_VALUED, InputTypes.OBSERVED_INPUT),
       ('v_Class_2', DataTypes.CATEGORICAL, InputTypes.KNOWN_INPUT),
-      # ('v_Class_3', DataTypes.CATEGORICAL, InputTypes.KNOWN_INPUT),
+      ('v_Class_3', DataTypes.CATEGORICAL, InputTypes.KNOWN_INPUT),
       ('Lane_2', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),
       # ('Lane_3', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),
       # ('Lane_4', DataTypes.CATEGORICAL, InputTypes.STATIC_INPUT),
@@ -192,7 +192,10 @@ class HighwaysFormatter(GenericDataFormatter):
 
     for col in column_names:
       if col not in {'forecast_time', 'identifier'}:
-        output[col] = self._target_scaler.inverse_transform(predictions[col])
+        print(predictions[col])
+        print(type(predictions[col]))
+        output[col] = self._target_scaler.inverse_transform((predictions[col]).values.reshape(-1,1))
+    #         https://stackoverflow.com/questions/51150153/valueerror-expected-2d-array-got-1d-array-instead
 
     return output
 
@@ -201,8 +204,14 @@ class HighwaysFormatter(GenericDataFormatter):
     """Returns fixed model parameters for experiments."""
 
     fixed_params = {
-        'total_time_steps': 55,
-        'num_encoder_steps': 50,
+        # 'total_time_steps': 50 + 20,
+        # 'num_encoder_steps': 50,
+        # 'num_epochs': 100,
+        # 'early_stopping_patience': 5,
+        # 'multiprocessing_workers': 5,
+
+        'total_time_steps': 40,
+        'num_encoder_steps': 20,
         'num_epochs': 100,
         'early_stopping_patience': 5,
         'multiprocessing_workers': 5,
